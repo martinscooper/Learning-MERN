@@ -1,0 +1,25 @@
+{
+  "name": "mern-stack",
+  "version": "1.0.0",
+  "description": "shopping list built with MERN stack",
+  "main": "server.js",
+  "scripts": {
+    "client-install": "npm install --prefix client",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "cd front_end && npm start",
+    "dev": "concurrently \" npm run server\" \"npm run client\" "
+  },
+  "author": "Martín Santillán Cooper",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.1.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.4",
+    "mongoose": "^5.9.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
