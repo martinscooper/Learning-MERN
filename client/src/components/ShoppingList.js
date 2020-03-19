@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Container, ListGroup, ListGroupItem, Button} from 'reactstrap';
-import {CssTransition, TransitionGroup, CSSTransition} from 'react-transition-group';
+import {TransitionGroup, CSSTransition} from 'react-transition-group';
 
 import { connect } from 'react-redux';
 import {getItems, deleteItem} from '../actions/itemActions';
