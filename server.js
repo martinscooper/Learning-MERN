@@ -14,13 +14,13 @@ const db = require('./config/keys').mongoURI;
 
 //Connect to Mongo
 mongoose.connect(db)
-    .then(() => console.log("1***MongoDB Connected"))
-    .catch(err => console.log("HUBO UN ERRORROROROROOROROROOROROOR"));
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log(err.log));
 
 //Use Routes
 app.use('/api/items', items);
 
 const port = process.env.PORT || 5000;
  
-app.listen(port, () => console.log(`2***Server started on port ${port}`));
+app.listen(port, () => console.log('Server started on port ${port}'));
 

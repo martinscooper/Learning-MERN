@@ -7,7 +7,7 @@
     "client-install": "npm install --prefix client",
     "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "cd front_end && npm start",
+    "client": "cd client && npm start",
     "dev": "concurrently \" npm run server\" \"npm run client\" "
   },
   "author": "Martín Santillán Cooper",
