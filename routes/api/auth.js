@@ -29,23 +29,22 @@ router.post('/auth', async (req, res) => {
         const passwordIsCorrect = await bcrypt.compare(password, user.password);
         if (!passwordIsCorrect) throw Error('Invalid Credentials');
 
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, {
-        expiresIn: 3600
-        });
+        const token = jwt.sign(
+            { id: user.id }, 
+            JWT_SECRET, 
+            { expiresIn: 3600 });
 
         res.status(200).json({
-        token,
-        user: {
-            id: user.id,
-            name: user.name,
-            email: user.email
-        }
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email
+            }
         });
     } catch (e) {
         res.status(400).json({ error: e.message });
     }
 });
-
-
 
 module.exports = router;
