@@ -18,7 +18,7 @@ mongoose.connect(db)
 //Use Routes
 app.use('/api/items',  require('./routes/api/items'));
 app.use('/api/users',  require('./routes/api/users'));
-app.use('/api/users',  require('./routes/api/auth'));
+app.use('/api/auth',  require('./routes/api/auth'));
 
 
 if (process.env.NODE_ENV === 'production'){

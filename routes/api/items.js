@@ -4,9 +4,12 @@ const auth = require('../../middleware/auth')
 //Item Model
 const Item = require('../../models/Item');
 
-// @route GET api/items
-// @desc Get All Items
-// @access Public
+/**
+ * @route GET api/items
+ * @desc Get All Items
+ * @access Public
+ */
+
 
 router.get('/', (req,res) => {
     Item.find()

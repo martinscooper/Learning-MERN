@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs')
 const config = require('config')
 const jwt = require('jsonwebtoken')
-
+const auth = require('../../middleware/auth')
 const JWT_SECRET = config.get('jwtSecret')
 
 //User Model
@@ -14,25 +14,34 @@ const User = require('../../models/User');
 // @desc Register Auth user
 // @access Public
 
-router.post('/auth', async (req, res) => {
-    const { email, password } = req.body;
+router.post('/', async (req, res) => {
+    const {
+        email,
+        password
+    } = req.body;
 
     // Simple validation
     if (!email || !password) {
-        return res.status(400).json({ msg: 'Please enter all fields' });
+        return res.status(400).json({
+            msg: 'Please enter all fields'
+        });
     }
 
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({
+            email
+        });
         if (!user) throw Error('User does not exist.');
 
         const passwordIsCorrect = await bcrypt.compare(password, user.password);
         if (!passwordIsCorrect) throw Error('Invalid Credentials');
 
-        const token = jwt.sign(
-            { id: user.id }, 
-            JWT_SECRET, 
-            { expiresIn: 3600 });
+        const token = jwt.sign({
+                id: user.id
+            },
+            JWT_SECRET, {
+                expiresIn: 3600
+            });
 
         res.status(200).json({
             token,
@@ -43,8 +52,21 @@ router.post('/auth', async (req, res) => {
             }
         });
     } catch (e) {
-        res.status(400).json({ error: e.message });
+        res.status(400).json({
+            error: e.message
+        });
     }
+});
+/**
+ * @route   GET api/auth/user
+ * @desc    Get user data
+ * @access  Private
+ */
+
+router.get('/user', auth, (req, res) => {
+    User.findById(req.user.id)
+        .select('-password')
+        .then(user => res.json(user));
 });
 
 module.exports = router;
