@@ -1,64 +1,62 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs')
-const config = require('config')
-const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs');
+const config = require('config');
+const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = config.get('jwtSecret')
 
-//User Model
-
+// User Model
 const User = require('../../models/User');
 
-// @route POST api/users
-// @desc Register new user
-// @access Public
+// @route   POST api/users
+// @desc    Register new user
+// @access  Public
+router.post('/', (req, res) => {
+  const { name, email, password } = req.body;
 
-router.post('/register', async (req, res) => {
-    const { name, email, password } = req.body;
+  // Simple validation
+  if(!name || !email || !password) {
+    return res.status(400).json({ msg: 'Please enter all fields' });
+  }
 
-    // Simple validation
-    if (!name || !email || !password) {
-        return res.status(400).json({ msg: 'Please enter all fields' });
-    }
+  // Check for existing user
+  User.findOne({ email })
+    .then(user => {
+      if(user) return res.status(400).json({ msg: 'User already exists' });
 
-    try {
-        const user = await User.findOne({ email });
-        if (user) throw Error('User already exists');
-
-        const salt = await bcrypt.genSalt(10);
-        if (!salt) throw Error('Something went wrong with bcrypt');
-
-        const hash = await bcrypt.hash(password, salt);
-        if (!hash) throw Error('Something went wrong hashing the password');
-
-        const newUser = new User({
+      const newUser = new User({
         name,
         email,
-        password: hash
-        });
+        password
+      });
 
-        const savedUser = await newUser.save();
-        if (!savedUser) throw Error('Something went wrong saving the user');
-
-        const token = jwt.sign(
-            { id: savedUser.id }, 
-            JWT_SECRET,
-            { expiresIn: 3600 });   
-
-        res.status(200).json({
-        token,
-        user: {
-            id: savedUser.id,
-            name: savedUser.name,
-            email: savedUser.email
-        }
-        });
-    } catch (e) {
-        res.status(400).json({ error: e.message });
-    }
+      // Create salt & hash
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if(err) throw err;
+          newUser.password = hash;
+          newUser.save()
+            .then(user => {
+              jwt.sign(
+                { id: user.id },
+                config.get('jwtSecret'),
+                { expiresIn: 3600 },
+                (err, token) => {
+                  if(err) throw err;
+                  res.json({
+                    token,
+                    user: {
+                      id: user.id,
+                      name: user.name,
+                      email: user.email
+                    }
+                  });
+                }
+              )
+            });
+        })
+      })
+    })
 });
-
-
 
 module.exports = router;
