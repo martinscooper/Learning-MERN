@@ -11,11 +11,17 @@ import {
 } from 'reactstrap';
 import {connect} from 'react-redux';
 import {addItem} from '../actions/itemActions';
+import PropTypes from 'prop-types'
 
 class ItemModal extends Component {
     state = {
         modal: false,
         name: ''
+    }
+
+
+    static propTypes = {
+        auth : PropTypes.bool.isRequired
     }
 
     toggle = () => {
@@ -43,11 +49,18 @@ class ItemModal extends Component {
     render(){
         return(
             <div>
-                <Button
+                {this.props.isAuthenticated ? (
+                    <Button
                     color="dark"
                     style={{marginBottom: '2rem'}}
                     onClick={this.toggle}
                     >Add Item</Button>
+                 ) : ( 
+                    <h4
+                    className='mb-3 ml-4'>
+                        Please log in to manage your feelings
+                    </h4>
+                  )}     
 
                 <Modal
                     isOpen={this.state.modal}
@@ -83,7 +96,8 @@ class ItemModal extends Component {
 }
 
 const MapStateToProps = state => ({
-    item : state.item
+    item : state.item,
+    isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(MapStateToProps, {addItem})(ItemModal)
