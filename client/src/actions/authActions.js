@@ -61,10 +61,10 @@ export const register = ({ name, email, password }) => dispatch => {
         type: REGISTER_FAIL
       });
     });
+
 };
 
-// Login User
-export const login = ({ email, password }) => dispatch => {
+export const login = ({  email, password }) => dispatch => {
   // Headers
   const config = {
     headers: {
@@ -93,11 +93,10 @@ export const login = ({ email, password }) => dispatch => {
     });
 };
 
-// Logout User
-export const logout = () => {
-  return {
+export const logout = ()  => dispatch => {
+  dispatch({
     type: LOGOUT_SUCCESS
-  };
+  })
 };
 
 // Setup config/headers and token
