@@ -2,8 +2,7 @@ import {
     GET_ITEMS,
     ADD_ITEM,
     DELETE_ITEM,
-    ITEMS_LOADING,
-    GET_ERRORS
+    ITEMS_LOADING
 } from './types';
 import axios from 'axios';
 import {
